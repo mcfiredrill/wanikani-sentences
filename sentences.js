@@ -3,7 +3,7 @@
 // @namespace  http://mozartpetter.com/wanikani
 // @version    0.2
 // @description  Loads sentences from jisho.org and displays it into the vocab screen of the WaniKani website.
-// @match      http://www.wanikani.com/review/session
+// @match      https://www.wanikani.com/review/session
 // @copyright  2013, Mozart Petter
 // @license    http://creativecommons.org/licenses/by/3.0/deed.en_US
 // ==/UserScript==
@@ -38,7 +38,7 @@ function checkIfVocab() {
 
 /**
  * Parses the given html code.
- * 
+ *
  * @param html The HTML code to be parsed.
  * @parma vocab The current vocab word.
  */
@@ -53,7 +53,7 @@ function parseContent(html, vocab) {
 
 /**
  * Extracts the sentences and translations from the given DOM object.
- * 
+ *
  * @param sentenceNodes A collection of the HTML elements containing the sentences.
  * @param translationNodes A collection of the HTML elements containing the translations.
  * @param vocab The current vocab word.
@@ -80,9 +80,9 @@ function getContentFromDom(sentenceNodes, translationNodes, vocab) {
 }
 
 /**
- * Generates a random number using max as a limit and excluding 
+ * Generates a random number using max as a limit and excluding
  * any numbers from exclude collection.
- * 
+ *
  * @param max The limit for the random number.
  * @param exclude A list with numbers to be excluded from the randomization.
  */
@@ -98,7 +98,7 @@ function getRandomNumber(max, exclude) {
 
 /**
  * Show the sentences from the given collection.
- * 
+ *
  * @param sentences A collection of sentences to be displayed.
  */
 function showContent(sentences) {
@@ -124,7 +124,7 @@ function showContent(sentences) {
 
 /**
  * Loads the sentences for the given vocab.
- * 
+ *
  * @param vocab The current vocab word.
  */
 function getSentencesForVocab(vocab) {
