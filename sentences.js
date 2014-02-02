@@ -4,6 +4,8 @@
 // @version    0.2
 // @description  Loads sentences from jisho.org and displays it into the vocab screen of the WaniKani website.
 // @match      https://www.wanikani.com/review/session
+// @run-at document-end
+// @require http://code.jquery.com/jquery-1.9.1.min.js
 // @copyright  2013, Mozart Petter
 // @license    http://creativecommons.org/licenses/by/3.0/deed.en_US
 // ==/UserScript==
@@ -13,14 +15,14 @@
 // The number of sentences you want to view at once.
 var TOTAL_SENTENCES = 3;
 // This will filter sentences that contains more than X chars on it.
-var MAX_CHARS_INTO_SENTENCE = 30;
+var MAX_CHARS_INTO_SENTENCE = 150;
 // If you don't want to see the translations, set it to false.
 var SHOW_TRANSLATIONS = true;
 
 
 // --- YOU SHOULDN'T CHANGE THOSE VALUES --- //
 // Sets debug mode on. You can play with it if you want't, but it will break the webpage. ;)e
-var DEBUG = false;
+var DEBUG = true;
 
 
 // --- DON'T TOUCH HERE UNLESS YOU KNOW WHAT YOU'RE DOING --- //
@@ -28,10 +30,10 @@ var DEBUG = false;
  * Checks if the current screen is a vocab screen.
  */
 function checkIfVocab() {
-    var header = document.getElementsByTagName("h1")[0];
-    var isVocab = header.className == "vocabulary";
+    var header = document.getElementsByTagName('h1')[0];
+    var isVocab = header.innerHTML.match(/Vocabulary/g);
     if (isVocab) {
-        var vocab = header.childNodes[0].innerHTML;
+        var vocab = document.getElementById('character').getElementsByTagName('span')[0].innerHTML;
         getSentencesForVocab(vocab);
     }
 }
@@ -66,9 +68,9 @@ function getContentFromDom(sentenceNodes, translationNodes, vocab) {
         excludedIndexes.push(randomIndex);
         var sentenceNode = sentenceNodes[randomIndex];
         var translationNode = translationNodes[randomIndex];
-        var sentence = sentenceNode.innerText;
-        if (sentence.length > MAX_CHARS_INTO_SENTENCE) continue;
-        var translation = translationNode.innerText;
+        var sentence = sentenceNode.textContent;
+        //if (sentence.length > MAX_CHARS_INTO_SENTENCE) continue;
+        var translation = translationNode.textContent;
         var hightlightedVocab = '<strong class="kanji-highlight" style="padding-left: 2px; padding-right: 2px;color:#666;background-color:#EEE">' + vocab + '</strong>';
         sentence = sentence.replace(vocab, hightlightedVocab, "gi");
         content[c] = [];
@@ -102,14 +104,14 @@ function getRandomNumber(max, exclude) {
  * @param sentences A collection of sentences to be displayed.
  */
 function showContent(sentences) {
-    var container = document.getElementById('item-info-main');
+    var container = document.getElementById('item-info');
     var htmlCode = '<h3>Usage Examples</h3>';
     htmlCode += '<ul style="padding: 0px;line-height: 1.8em;list-style: decimal inside;">';
     for (var i = 0; i < sentences.length; i++) {
         htmlCode += '<li style="font-weight: bold;color: #888;">';
         htmlCode += '<span style="font-weight: normal; color: #333;padding-left: 5px;display:block;">' + sentences[i][0] + '</span>';
         if (SHOW_TRANSLATIONS) {
-	        htmlCode += '<span style="display: block;margin-bottom: 10px;font-weight: normal;color: #888;padding-left: 20px;">' + sentences[i][1] + '</span>';
+          htmlCode += '<span style="display: block;margin-bottom: 10px;font-weight: normal;color: #888;padding-left: 20px;">' + sentences[i][1] + '</span>';
         }
         htmlCode += '</li>';
     }
@@ -141,8 +143,12 @@ function getSentencesForVocab(vocab) {
  * Do a setup to handle events from the question form.
  */
 function setupForm() {
-    var form = document.getElementById('question-form');
-    form.addEventListener("submit", function() {
+    var form = document.getElementById('answer-form');
+/*    form.getElementsByTagName('button')[0].onclick = function() {
+        checkIfVocab();
+    };
+    */
+    $('#answer-form button').on('click',function(e){
         checkIfVocab();
     });
 }
